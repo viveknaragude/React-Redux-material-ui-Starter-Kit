@@ -1,4 +1,4 @@
-# React@16.6.0-Redux@4.0.1-material-ui/core@3.3.2(@material-ui Next) Starter Kit
+# React(16.6.0)-Redux(4.0.1)-material-ui/core(Next3.3.2) Starter Kit
 
 This starter kit is designet to give **up-to-date** `ReactJS` + `Redux`+ `Material UI Next`+`react-router v4` for react projects.
 
