@@ -1,6 +1,6 @@
 # React@16.6.0-Redux@4.0.1-material-ui/core@3.3.2(@material-ui Next) Starter Kit
 
-This starter kit is designet to give for **up-to-date** `ReactJS` + `Redux`+ `Material UI Next`+`react-router v4` react projects.
+This starter kit is designet to give **up-to-date** `ReactJS` + `Redux`+ `Material UI Next`+`react-router v4` for react projects.
 
 ## What is this?
 It's based on [Create React App](https://github.com/facebookincubator/create-react-app) ,[Material-UI@Next](https://material-ui.com/) that uses [Redux](https://redux.js.org).
@@ -41,6 +41,5 @@ $ npm start                     # Compile and launch in dev mode
 ```
 If everithing is fine you should see a message like this:
 ```
-==> ??  Listening on port 3500. Open up http://localhost:3000/ in your browser.
+Listening on port 3000. Open up http://localhost:3000/ in your browser.
 ```
-If that is the case you can the application in `http://localhost:3000`.
