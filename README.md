@@ -5,12 +5,6 @@ This starter kit is designet to give **up-to-date** `ReactJS` + `Redux`+ `Materi
 ## What is this?
 It's based on [Create React App](https://github.com/facebookincubator/create-react-app) ,[Material-UI@Next](https://material-ui.com/) that uses [Redux](https://redux.js.org).
 
-## Why ?
-
-* It is a simple starter kit and fresh project without any bug or error.
-* It is customisable & simple to understand.
-* It is Best kit to create Web Application and Web Portal using React-Redux-material-ui@Next.
-
 
 ## Detailed Content
 
