@@ -1,4 +1,4 @@
-# React(16.6.0)-Redux(4.0.1)-material-ui/core(Next3.3.2) Starter Kit
+# React(16.6.0)-Redux(4.0.1)-material-ui/core(3.3.2) Starter Kit
 
 This starter kit is designet to give **up-to-date** `ReactJS` + `Redux`+ `Material UI Next`+`react-router v4` for react projects.
 
@@ -11,6 +11,11 @@ It's based on [Create React App](https://github.com/facebookincubator/create-rea
 * Easily rename project strings,label,Pages,Menu
 * create action and reducer using redux example already exists
 
+![img1](https://user-images.githubusercontent.com/25178257/48659881-2f96f000-ea7e-11e8-983e-55f977e27340.PNG)
+
+![img2](https://user-images.githubusercontent.com/25178257/48659882-2f96f000-ea7e-11e8-8a93-765cb19137c1.PNG)
+
+![img4](https://user-images.githubusercontent.com/25178257/48659884-2f96f000-ea7e-11e8-90d5-b7312a97ebb1.PNG)
 
 ## Detailed Content
 
