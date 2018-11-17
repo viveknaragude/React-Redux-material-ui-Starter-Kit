@@ -6,6 +6,12 @@ This starter kit is designet to give **up-to-date** `ReactJS` + `Redux`+ `Materi
 It's based on [Create React App](https://github.com/facebookincubator/create-react-app) ,[Material-UI@Next](https://material-ui.com/) that uses [Redux](https://redux.js.org).
 
 
+## Features
+* Built-in UI (web app) ready to upload as per your requirements & deploy.
+* Easily rename project strings,label,Pages,Menu
+* create action and reducer using redux example already exists
+
+
 ## Detailed Content
 
 **Front:**
@@ -37,3 +43,17 @@ If everithing is fine you should see a message like this:
 ```
 Listening on port 3000. Open up http://localhost:3000/ in your browser.
 ```
+
+## Issues
+The recommended medium to report and track issues is by opening one on [Github](https://github.com/viveknaragude/React-Redux-material-ui-Starter-Kit/issues).
+
+## Contributing
+ Any kind of contribution is welcome! Simply follow the next steps:
+
+Fork the project.
+Create a new branch.
+Make your changes and write tests when practical.
+Commit your changes to the new branch.
+Send a pull request, it will be reviewed shortly.
+
+In case you want to add a feature, please create a new issue and briefly explain what the feature would consist of. For bugs or requests, before creating an issue please check if one has already been created for it.
