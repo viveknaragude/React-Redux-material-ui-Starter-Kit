@@ -11,12 +11,6 @@ It's based on [Create React App](https://github.com/facebookincubator/create-rea
 * Easily rename project strings,label,Pages,Menu
 * create action and reducer using redux example already exists
 
-![img1](https://user-images.githubusercontent.com/25178257/48659881-2f96f000-ea7e-11e8-983e-55f977e27340.PNG)
-
-![img2](https://user-images.githubusercontent.com/25178257/48659882-2f96f000-ea7e-11e8-8a93-765cb19137c1.PNG)
-
-![img4](https://user-images.githubusercontent.com/25178257/48659884-2f96f000-ea7e-11e8-90d5-b7312a97ebb1.PNG)
-
 ## Detailed Content
 
 **Front:**
@@ -25,6 +19,12 @@ It's based on [Create React App](https://github.com/facebookincubator/create-rea
 * react-redux (You can use Redux together with React(https://redux.js.org/basics/usagewithreact))
 * @material-ui/core(React components that implement Google's Material Design.(https://material-ui.com/))
 * redux-form-material-ui(Is a set of wrappers to facilitate the use of material-ui components with redux-form(https://www.npmjs.com/package/redux-form-material-ui))
+
+![img1](https://user-images.githubusercontent.com/25178257/48659881-2f96f000-ea7e-11e8-983e-55f977e27340.PNG)
+
+![img2](https://user-images.githubusercontent.com/25178257/48659882-2f96f000-ea7e-11e8-8a93-765cb19137c1.PNG)
+
+![img4](https://user-images.githubusercontent.com/25178257/48659884-2f96f000-ea7e-11e8-90d5-b7312a97ebb1.PNG)
 
 
 ## Getting Started
