@@ -1,0 +1,53 @@
+Yes, in Module Federation, both export and import of modules between applications is possible. It allows you to dynamically share code between different applications (micro frontends) at runtime.
+
+Here’s a brief explanation of both processes:
+
+1. Exporting Modules:
+
+In a micro frontend, you can expose specific modules or components that can be consumed by other applications. This is done by configuring the exposes property in your webpack.config.js for the Module Federation plugin.
+
+Example of exporting modules:
+
+// webpack.config.js for host app
+new ModuleFederationPlugin({
+  name: "app1",
+  filename: "remoteEntry.js",
+  exposes: {
+    './Button': './src/Button',  // Exposes Button component for other apps
+  },
+  shared: ["react", "react-dom"],  // Share dependencies like react
+})
+
+2. Importing Modules:
+
+In another micro frontend or application, you can consume the exposed module using the remotes property in your webpack.config.js.
+
+Example of importing modules:
+
+// webpack.config.js for consuming app
+new ModuleFederationPlugin({
+  name: "app2",
+  filename: "remoteEntry.js",
+  remotes: {
+    app1: "app1@http://localhost:3001/remoteEntry.js", // Import from app1
+  },
+  shared: ["react", "react-dom"],
+})
+
+And in your code, you can dynamically import the exposed module:
+
+import React from 'react';
+
+const Button = React.lazy(() => import("app1/Button")); // Importing Button from app1
+
+function App() {
+  return (
+    <React.Suspense fallback="Loading...">
+      <Button />
+    </React.Suspense>
+  );
+}
+
+export default App;
+
+This setup allows seamless sharing of code across different micro frontends or applications without bundling the code multiple times. The exporting and importing can happen between different applications dynamically at runtime.
