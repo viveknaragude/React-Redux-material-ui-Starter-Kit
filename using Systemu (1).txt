@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Reflection;
+
+public static class SqlDataReaderExtensions
+{
+    // Cache property info to avoid repeated reflection
+    private static readonly Dictionary<Type, PropertyInfo[]> PropertyCache = new();
+
+    public static List<T> ToList<T>(this SqlDataReader reader) where T : new()
+    {
+        var results = new List<T>();
+        var properties = GetProperties(typeof(T));
+        var columnNames = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
+        while (reader.Read())
+        {
+            T item = new T();
+            foreach (var property in properties)
+            {
+                if (columnNames.Contains(property.Name, StringComparer.OrdinalIgnoreCase))
+                {
+                    var columnValue = reader[property.Name];
+                    if (columnValue != DBNull.Value)
+                    {
+                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        property.SetValue(item, Convert.ChangeType(columnValue, propertyType));
+                    }
+                }
+            }
+            results.Add(item);
+        }
+
+        return results;
+    }
+
+    private static PropertyInfo[] GetProperties(Type type)
+    {
+        if (!PropertyCache.TryGetValue(type, out var properties))
+        {
+            properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            PropertyCache[type] = properties;
+        }
+        return properties;
+    }
+}
