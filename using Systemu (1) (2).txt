@@ -1,0 +1,67 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Reflection;
+
+public static class SqlDataReaderExtensions
+{
+    // Cache constructor info to avoid repeated reflection
+    private static readonly Dictionary<Type, ConstructorInfo> ConstructorCache = new();
+
+    public static List<T> ToList<T>(this SqlDataReader reader)
+    {
+        var results = new List<T>();
+
+        if (typeof(T) == typeof(string))
+        {
+            // Handle T as string (Assuming first column value is used)
+            while (reader.Read())
+            {
+                results.Add((T)(object)reader[0].ToString());
+            }
+            return results;
+        }
+
+        var properties = GetProperties(typeof(T));
+        var columnNames = Enumerable.Range(0, reader.FieldCount).Select(reader.GetName).ToList();
+
+        while (reader.Read())
+        {
+            T item = (T)CreateInstance(typeof(T));
+            foreach (var property in properties)
+            {
+                if (columnNames.Contains(property.Name, StringComparer.OrdinalIgnoreCase))
+                {
+                    var columnValue = reader[property.Name];
+                    if (columnValue != DBNull.Value)
+                    {
+                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        property.SetValue(item, Convert.ChangeType(columnValue, propertyType));
+                    }
+                }
+            }
+            results.Add(item);
+        }
+
+        return results;
+    }
+
+    private static object CreateInstance(Type type)
+    {
+        if (!ConstructorCache.TryGetValue(type, out var constructor))
+        {
+            constructor = type.GetConstructor(Type.EmptyTypes); // Find parameterless constructor
+            if (constructor == null)
+                throw new InvalidOperationException($"Type {type.FullName} must have a parameterless constructor.");
+            ConstructorCache[type] = constructor;
+        }
+        return constructor.Invoke(null);
+    }
+
+    private static PropertyInfo[] GetProperties(Type type)
+    {
+        return type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+    }
+}
