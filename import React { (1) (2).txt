@@ -1,0 +1,186 @@
+import React, { useState, useMemo, useCallback } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Checkbox, Button, TableSortLabel, TablePagination } from '@mui/material';
+import styled from 'styled-components';
+
+// Styled Components
+const Container = styled(TableContainer)`
+  background-color: #f9f9f9;
+  color: #000;
+  border-radius: 8px;
+  max-width: 100%;
+  overflow-x: auto;
+`;
+
+const Subtitle = styled.div`
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 4px;
+  cursor: ${(props) => (props.clickable ? 'pointer' : 'default')};
+  display: block;
+
+  @media (max-width: 768px) {
+    font-size: 0.7em;
+  }
+`;
+
+const StatusColor = {
+  Draft: '#ffa500',
+  Published: '#28a745',
+  Closed: '#dc3545',
+};
+
+// Utility: Render Content
+const renderContent = (value, type) => {
+  if (!value) return '—';
+  switch (type) {
+    case 'text':
+    case 'paragraph':
+      return <span>{value}</span>;
+    case 'number':
+      return <span>{value.toLocaleString()}</span>;
+    case 'status':
+      return <span style={{ color: StatusColor[value] || 'inherit' }}>{value}</span>;
+    default:
+      return <span>{value}</span>;
+  }
+};
+
+// Utility: Sorting Logic
+const sortData = (rows, key, direction) => {
+  if (!key) return rows;
+  return [...rows].sort((a, b) => {
+    const aValue = a[key]?.main || a[key] || '';
+    const bValue = b[key]?.main || b[key] || '';
+    return direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+  });
+};
+
+// Component: Table Header
+const TableHeader = ({ columns, sortConfig, onSort }) => (
+  <TableHead>
+    <TableRow>
+      <TableCell padding="checkbox"><Checkbox /></TableCell>
+      {columns.map((col) => (
+        <TableCell key={col.field}>
+          <div
+            onClick={col.onClick ? () => col.onClick(col.title) : undefined}
+            onMouseOver={col.onOver ? () => col.onOver(col.title) : undefined}
+            style={{ cursor: col.onClick || col.onOver ? 'pointer' : 'default' }}
+          >
+            {col.sortable ? (
+              <TableSortLabel
+                active={sortConfig.key === col.field}
+                direction={sortConfig.key === col.field ? sortConfig.direction : 'asc'}
+                onClick={() => onSort(col.field)}
+              >
+                {col.title}
+              </TableSortLabel>
+            ) : (
+              <span>{col.title}</span>
+            )}
+          </div>
+          {col.subTitle?.text && <Subtitle>{col.subTitle.text}</Subtitle>}
+        </TableCell>
+      ))}
+      <TableCell>Actions</TableCell>
+    </TableRow>
+  </TableHead>
+);
+
+// Component: Table Row
+const TableRowComponent = ({ row, columns, onEdit, onDelete }) => (
+  <TableRow>
+    <TableCell padding="checkbox"><Checkbox /></TableCell>
+    {columns.map((col) => (
+      <TableCell key={col.field}>
+        {renderContent(row[col.field]?.main, col.type)}
+        {col.subTitle?.field && row[col.subTitle.field] && (
+          <Subtitle>{renderContent(row[col.subTitle.field], col.subTitle.type)}</Subtitle>
+        )}
+      </TableCell>
+    ))}
+    <TableCell>
+      <Button onClick={() => onEdit(row)}>Edit</Button>
+      <Button onClick={() => onDelete(row)}>Delete</Button>
+    </TableCell>
+  </TableRow>
+);
+
+// Main Component: DynamicTable
+const DynamicTable = ({ data, onEdit, onDelete }) => {
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // Handle sorting
+  const handleSort = useCallback((field) => {
+    if (!field) return;
+    setSortConfig((prev) => ({
+      key: field,
+      direction: prev.key === field && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  }, []);
+
+  // Memoized sorted rows
+  const sortedRows = useMemo(() => sortData(data.rows, sortConfig.key, sortConfig.direction), [data.rows, sortConfig]);
+
+  // Handle pagination change
+  const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Paginated Data
+  const paginatedRows = useMemo(() => sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage), [sortedRows, page, rowsPerPage]);
+
+  return (
+    <Container>
+      <Table>
+        <TableHeader columns={data.columns} sortConfig={sortConfig} onSort={handleSort} />
+        <TableBody>
+          {paginatedRows.map((row, index) => (
+            <TableRowComponent key={index} row={row} columns={data.columns} onEdit={onEdit} onDelete={onDelete} />
+          ))}
+        </TableBody>
+      </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={sortedRows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Container>
+  );
+};
+
+// Example Usage
+const App = () => {
+  const [data, setData] = useState({
+    columns: [
+      { title: 'Booking ID', field: 'bookingId', type: 'text', sortable: true },
+      { title: 'Agent Name', field: 'agent', type: 'text', sortable: true },
+      { title: 'Status', field: 'status', type: 'status', sortable: false },
+      { title: 'Agent ID', field: 'agentId', type: 'number', sortable: true },
+    ],
+    rows: Array.from({ length: 50 }, (_, i) => ({
+      bookingId: { main: `BK00${i + 1}` },
+      agent: { main: `Agent ${String.fromCharCode(65 + (i % 26))}` },
+      status: { main: ['Draft', 'Published', 'Closed'][i % 3] },
+      agentId: { main: 100 + i },
+    })),
+  });
+
+  const handleEdit = (row) => console.log('Edit:', row);
+  const handleDelete = (row) => setData((prev) => ({
+    ...prev,
+    rows: prev.rows.filter((r) => r.bookingId.main !== row.bookingId.main),
+  }));
+
+  return <DynamicTable data={data} onEdit={handleEdit} onDelete={handleDelete} />;
+};
+
+export default App;
